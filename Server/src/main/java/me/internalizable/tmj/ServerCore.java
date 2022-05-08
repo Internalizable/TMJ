@@ -10,15 +10,26 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import me.internalizable.tmj.factory.SocketClientHandler;
+import me.internalizable.tmj.mongo.MongoStore;
 
 public class ServerCore {
 
     private static final int SERVER_PORT = 6000;
 
+    @Getter
+    private final MongoStore mongoStore;
+
+    public ServerCore() {
+        this.mongoStore = new MongoStore();
+    }
+
     @SneakyThrows
     public static void main(String[] args) {
+        ServerCore serverCore = new ServerCore();
+
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
@@ -33,7 +44,7 @@ public class ServerCore {
                             p.addLast(new StringDecoder());
                             p.addLast(new StringEncoder());
 
-                            p.addLast(new SocketClientHandler());
+                            p.addLast(new SocketClientHandler(serverCore));
                         }
                     });
 

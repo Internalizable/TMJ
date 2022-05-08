@@ -1,4 +1,4 @@
-package me.internalizable.tmj.persistence;
+package me.internalizable.tmj.requests;
 
 import lombok.Builder;
 import lombok.Getter;
